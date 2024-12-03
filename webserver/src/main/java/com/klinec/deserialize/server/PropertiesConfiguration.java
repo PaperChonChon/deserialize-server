@@ -79,23 +79,27 @@ class PropertiesConfiguration {
                 new PathResource(CONFIG_FILE_NAME),
                 new ClassPathResource(CONFIG_FILE_NAME)
         };
-        final Optional<Resource> resource =
-                stream(possiblePropertiesResources)
-                        .filter(Resource::exists)
-                        .reduce((previous, current) -> current);
 
-        if (!resource.isPresent()){
-            return propConfig;
+        Resource resource = null;
+        for (Resource possibleResource : possiblePropertiesResources) {
+            if (possibleResource.exists()) {
+                resource = possibleResource;
+                break; // Use the first existing resource
+            }
+        }
+
+        if (resource == null) {
+            return propConfig; // No resource found, return the empty config
         }
 
         // Log which file was actually used.
         try {
-            LOG.info("Using config file: {}", resource.get().getFile());
+            LOG.info("Using config file: {}", resource.getFile());
         } catch (Exception e) {
             LOG.error("Could not get file info", e);
         }
 
-        yaml.setResources(resource.get());
+        yaml.setResources(resource);
         propList.add(yaml.getObject());
 
         propConfig.setPropertiesArray(propList.toArray(new Properties[propList.size()]));
@@ -110,11 +114,15 @@ class PropertiesConfiguration {
                 new PathResource(filename),
                 new PathResource(getCustomPath(filename))
         };
-        final Resource resource = stream(possiblePropertiesResources)
-                .filter(Resource::exists)
-                .reduce((previous, current) -> current)
-                .orElse(null);
-        if (resource == null){
+        Resource resource = null;
+        for (Resource possibleResource : possiblePropertiesResources) {
+            if (possibleResource.exists()) {
+                resource = possibleResource;
+                break; // Use the first existing resource
+            }
+        }
+
+        if (resource == null) {
             return null;
         }
 
