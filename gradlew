@@ -5,7 +5,7 @@
 ##  Gradle start up script for UN*X
 ##
 ##############################################################################
-export JAVA_OPTS="-Dhttps.protocols=TLSv1,TLSv1.1"
+export JAVA_OPTS="-Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2"
 # Attempt to set APP_HOME
 # Resolve links: $0 may be a link
 PRG="$0"
@@ -28,7 +28,7 @@ APP_NAME="Gradle"
 APP_BASE_NAME=`basename "$0"`
 
 # Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
-DEFAULT_JVM_OPTS="-Dhttps.protocols=TLSv1,TLSv1.1"
+DEFAULT_JVM_OPTS="-Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2"
 
 # Use the maximum available, or set MAX_FD != -1 to use that value.
 MAX_FD="maximum"
