@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
 import java.net.URLDecoder;
-import java.util.Base64;
+//import java.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Created by dusanklinec on 01.09.16.
