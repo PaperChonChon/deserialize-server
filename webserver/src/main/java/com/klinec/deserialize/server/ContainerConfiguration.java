@@ -31,29 +31,35 @@ public class ContainerConfiguration {
         final String absoluteKeystoreFile = new File(keystoreFile)
                 .getAbsolutePath();
 
-        return container -> {
-            TomcatEmbeddedServletContainerFactory tomcat = (TomcatEmbeddedServletContainerFactory) container;
-            tomcat.addConnectorCustomizers(connector -> {
-                connector.setPort(Integer.parseInt(serverPort));
+        return new EmbeddedServletContainerCustomizer() { // Anonymous class instead of lambda
+            @Override
+            public void customize(ConfigurableEmbeddedServletContainer container) {
+                TomcatEmbeddedServletContainerFactory tomcat = (TomcatEmbeddedServletContainerFactory) container;
+                tomcat.addConnectorCustomizers(new TomcatConnectorCustomizer() { // Nested anonymous class
+                    @Override
+                    public void customize(org.apache.coyote.Connector connector) {
+                        connector.setPort(Integer.parseInt(serverPort));
 
-                if (httpsEnabled) {
-                    connector.setSecure(true);
-                    connector.setScheme("https");
+                        if (httpsEnabled) {
+                            connector.setSecure(true);
+                            connector.setScheme("https");
 
-                    Http11NioProtocol proto = (Http11NioProtocol) connector.getProtocolHandler();
-                    proto.setSSLEnabled(true);
-                    proto.setKeystoreFile(absoluteKeystoreFile);
-                    proto.setKeystorePass(keystorePass);
-                    proto.setKeystoreType("JKS");
-                    proto.setKeyAlias("tomcat");
+                            Http11NioProtocol proto = (Http11NioProtocol) connector.getProtocolHandler();
+                            proto.setSSLEnabled(true);
+                            proto.setKeystoreFile(absoluteKeystoreFile);
+                            proto.setKeystorePass(keystorePass);
+                            proto.setKeystoreType("JKS");
+                            proto.setKeyAlias("tomcat");
 
-                    LOG.info("HTTPS used");
+                            LOG.info("HTTPS used");
 
-                } else {
-                    connector.setSecure(false);
-                    connector.setScheme("http");
-                }
-            });
+                        } else {
+                            connector.setSecure(false);
+                            connector.setScheme("http");
+                        }
+                    }
+                });
+            }
         };
     }
 }
