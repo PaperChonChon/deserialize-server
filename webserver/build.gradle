@@ -65,7 +65,7 @@ buildscript {
         mavenLocal()
         mavenCentral()
         clojars {
-            url 'https://repo.clojars.org/clojure-interop/'
+            url 'https://repo.clojars.org/'
         }
     }
 
