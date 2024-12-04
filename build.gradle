@@ -10,11 +10,17 @@ targetCompatibility = JavaVersion.VERSION_1_7
 repositories {
     mavenLocal()
     mavenCentral()
+    clojars {
+            url "https://repo.clojars.org/clojure-interop/"
+    }
 }
 
 allprojects {
     repositories {
         mavenCentral()
+        clojars {
+            url "https://repo.clojars.org/clojure-interop/"
+        }
     }
 }
 
