@@ -63,6 +63,8 @@ public class ContainerConfiguration {
             connector.setProperty("SSLEnabled", "true");
             connector.setProperty("sslProtocol", "TLS");
             connector.setSSLContext(sslContext);
+            connector.setProperty("keystoreFile", new File(keystoreFile).getAbsolutePath());
+            connector.setProperty("keystorePass", keystorePass);
             //connector.setProperty("sslContext", sslContext);
 
             tomcat.getService().addConnector(connector);
