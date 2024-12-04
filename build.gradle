@@ -10,7 +10,7 @@ targetCompatibility = JavaVersion.VERSION_1_7
 repositories {
     mavenLocal()
     mavenCentral()
-    clojars {
+    maven {
             url 'https://repo.clojars.org/'
     }
 }
@@ -18,7 +18,7 @@ repositories {
 allprojects {
     repositories {
         mavenCentral()
-        clojars {
+        maven {
             url 'https://repo.clojars.org/'
         }
     }
