@@ -62,7 +62,7 @@ public class ContainerConfiguration {
             connector.setScheme("https");
             connector.setProperty("SSLEnabled", "true");
             connector.setProperty("sslProtocol", "TLS");
-            connector.setSSLContext(sslContext);
+            //connector.setSSLContext(sslContext);
             connector.setProperty("keystoreFile", new File(keystoreFile).getAbsolutePath());
             connector.setProperty("keystorePass", keystorePass);
             //connector.setProperty("sslContext", sslContext);
