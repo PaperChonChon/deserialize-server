@@ -46,7 +46,8 @@ public class MainController {
                     .replace('_', '/')
                     .replace("=", "");
             LOG.info("Payload: " + request);
-            decoded = Base64.getDecoder().decode(urlDecoded);
+            //decoded = Base64.getDecoder().decode(urlDecoded);
+            decoded = Base64.decodeBase64(urlDecoded);
 
         } catch(Exception e){
             LOG.error("Base64 decoded: " + urlDecoded);
@@ -88,7 +89,8 @@ public class MainController {
         ObjectOutputStream out = new ObjectOutputStream(bos);
         out.writeObject(input);
         byte[] yourBytes = bos.toByteArray();
-        return Base64.getEncoder().encodeToString(yourBytes);
+        return Base64.encodeBase64(yourBytes);
+        //return Base64.getEncoder().encodeToString(yourBytes);
     }
 
 }
