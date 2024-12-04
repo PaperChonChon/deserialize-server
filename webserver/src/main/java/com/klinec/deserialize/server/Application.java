@@ -21,7 +21,7 @@ public class Application implements CommandLineRunner {
         SpringApplication.run(Application.class, args);
     }
 
-    @Override
+    //@Override
     public void run(String... args) throws Exception {
         LOG.info("Started...");
     }
