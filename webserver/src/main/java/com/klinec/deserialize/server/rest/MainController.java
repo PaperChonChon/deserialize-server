@@ -89,7 +89,7 @@ public class MainController {
         ObjectOutputStream out = new ObjectOutputStream(bos);
         out.writeObject(input);
         byte[] yourBytes = bos.toByteArray();
-        return Base64.encodeBase64(yourBytes);
+        return Base64.encodeBase64String(yourBytes);
         //return Base64.getEncoder().encodeToString(yourBytes);
     }
 
