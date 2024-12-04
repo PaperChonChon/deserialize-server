@@ -59,8 +59,8 @@ public class ContainerConfiguration {
             connector.setScheme("https");
             connector.setProperty("SSLEnabled", "true");
             connector.setProperty("sslProtocol", "TLS");
-            connector.setProperty("sslContext",  
- sslContext);
+            connector.setSSLContext(sslContext);
+            //connector.setProperty("sslContext", sslContext);
 
             tomcat.getService().addConnector(connector);
             LOG.info("HTTPS enabled");
