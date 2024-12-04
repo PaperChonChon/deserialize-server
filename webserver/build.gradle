@@ -61,6 +61,9 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
+        clojars {
+            url "https://repo.clojars.org/clojure-interop/"
+        }
     }
 
     dependencies {
