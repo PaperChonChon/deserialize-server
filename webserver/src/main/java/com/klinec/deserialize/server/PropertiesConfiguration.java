@@ -14,10 +14,7 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
-
-import static java.util.Arrays.stream;
 
 /**
  * Override properties file location / configuration file.
@@ -59,9 +56,9 @@ class PropertiesConfiguration {
         final List<Properties> propList = new LinkedList<>();
 
         // Load properties at first
-        for(String file : PROPERTIES_FILENAMES){
+        for (String file : PROPERTIES_FILENAMES) {
             final Properties props = loadProperties(file);
-            if (props == null){
+            if (props == null) {
                 continue;
             }
 
@@ -79,23 +76,28 @@ class PropertiesConfiguration {
                 new PathResource(CONFIG_FILE_NAME),
                 new ClassPathResource(CONFIG_FILE_NAME)
         };
-        final Optional<Resource> resource =
-                stream(possiblePropertiesResources)
-                        .filter(Resource::exists)
-                        .reduce((previous, current) -> current);
 
-        if (!resource.isPresent()){
-            return propConfig;
+        Resource resource = null;
+        // Check each resource manually
+        for (Resource res : possiblePropertiesResources) {
+            if (res.exists()) {
+                resource = res;
+                break; // Once we find an existing resource, stop
+            }
+        }
+
+        if (resource == null) {
+            return propConfig; // No resource found, return empty config
         }
 
         // Log which file was actually used.
         try {
-            LOG.info("Using config file: {}", resource.get().getFile());
+            LOG.info("Using config file: {}", resource.getFile());
         } catch (Exception e) {
             LOG.error("Could not get file info", e);
         }
 
-        yaml.setResources(resource.get());
+        yaml.setResources(resource);
         propList.add(yaml.getObject());
 
         propConfig.setPropertiesArray(propList.toArray(new Properties[propList.size()]));
@@ -110,18 +112,24 @@ class PropertiesConfiguration {
                 new PathResource(filename),
                 new PathResource(getCustomPath(filename))
         };
-        final Resource resource = stream(possiblePropertiesResources)
-                .filter(Resource::exists)
-                .reduce((previous, current) -> current)
-                .orElse(null);
-        if (resource == null){
-            return null;
+
+        Resource resource = null;
+        // Check each resource manually
+        for (Resource res : possiblePropertiesResources) {
+            if (res.exists()) {
+                resource = res;
+                break; // Once we find an existing resource, stop
+            }
+        }
+
+        if (resource == null) {
+            return null; // No valid resource found
         }
 
         final Properties properties = new Properties();
         try {
             properties.load(resource.getInputStream());
-        } catch(final IOException exception) {
+        } catch (final IOException exception) {
             throw new RuntimeException(exception);
         }
 
@@ -131,7 +139,7 @@ class PropertiesConfiguration {
     }
 
     private String getCustomPath(final String filename) {
-        if (propertiesLocation == null){
+        if (propertiesLocation == null) {
             return filename;
         }
         return propertiesLocation.endsWith(".properties") ? propertiesLocation : propertiesLocation + filename;
@@ -139,15 +147,15 @@ class PropertiesConfiguration {
 
     private String getCustomConfigPath() {
         final String systemLoc = System.getProperty("config.location");
-        if (systemLoc != null){
+        if (systemLoc != null) {
             return getCustomWithPath(systemLoc);
         }
 
         return getCustomWithPath(configLocation);
     }
 
-    private String getCustomWithPath(String path){
-        if (path == null){
+    private String getCustomWithPath(String path) {
+        if (path == null) {
             return CONFIG_FILE_NAME;
         }
         return path.endsWith(".yml") ? path : path + "/" + CONFIG_FILE_NAME;
