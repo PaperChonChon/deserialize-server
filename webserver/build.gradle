@@ -13,6 +13,9 @@ targetCompatibility = 1.7
 repositories {
     mavenCentral()
     mavenLocal()
+    clojars {
+            url "https://repo.clojars.org/clojure-interop/"
+    }
 }
 
 dependencies {
