@@ -3,22 +3,10 @@ package com.klinec.deserialize.server;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardServer;
 import org.apache.catalina.startup.Tomcat;
-import org.slf4j.Logger;  
-
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-import java.io.File;  
-
-import java.security.KeyStore;
+// Removed the import for ConfigurableServletWebServerFactory
 
 @Configuration
 public class ContainerConfiguration {
@@ -27,10 +15,11 @@ public class ContainerConfiguration {
 
     @Bean
     @DependsOn(value = "yaml-config")
-    public ServletWebServerFactory servletContainer(@Value("${keystore.file}") String keystoreFile,
-                                                     @Value("${server.port}") final String serverPort,
-                                                     @Value("${server.https}") final boolean httpsEnabled,
-                                                     @Value("${keystore.pass}") final String keystorePass) throws Exception {
+    public Tomcat servletContainer(@Value("${keystore.file}") String keystoreFile,
+                                   @Value("${server.port}") final String serverPort,
+                                   @Value("${server.https}") final boolean httpsEnabled,
+                                   @Value("${keystore.pass}") final String keystorePass) throws Exception  
+ {
 
         Tomcat tomcat = new Tomcat();
 
@@ -46,16 +35,13 @@ public class ContainerConfiguration {
             keystore.load(new File(keystoreFile).toURI().toURL().openStream(), keystorePass.toCharArray());
 
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            keyManagerFactory.init(keystore,  
- keystorePass.toCharArray());
+            keyManagerFactory.init(keystore, keystorePass.toCharArray());
 
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());  
-
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(null); // You might need to set truststore here for client certificate validation
 
             SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(),  
- null);
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
 
             Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
             connector.setPort(Integer.parseInt(serverPort));
@@ -77,6 +63,7 @@ public class ContainerConfiguration {
         StandardServer server = (StandardServer) tomcat.getServer();
         server.addIgnoredProtocols("ajp,http2"); // Remove unnecessary protocols (optional)
 
+        // We directly return the configured Tomcat instance
         return tomcat;
     }
 }
