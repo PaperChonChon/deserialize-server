@@ -14,10 +14,7 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-//import java.util.Optional;
 import java.util.Properties;
-
-import static java.util.Arrays.stream;
 
 /**
  * Override properties file location / configuration file.
@@ -59,9 +56,9 @@ class PropertiesConfiguration {
         final List<Properties> propList = new LinkedList<>();
 
         // Load properties at first
-        for(String file : PROPERTIES_FILENAMES){
+        for (String file : PROPERTIES_FILENAMES) {
             final Properties props = loadProperties(file);
-            if (props == null){
+            if (props == null) {
                 continue;
             }
 
@@ -81,15 +78,16 @@ class PropertiesConfiguration {
         };
 
         Resource resource = null;
-        for (Resource possibleResource : possiblePropertiesResources) {
-            if (possibleResource.exists()) {
-                resource = possibleResource;
-                break; // Use the first existing resource
+        // Check each resource manually
+        for (Resource res : possiblePropertiesResources) {
+            if (res.exists()) {
+                resource = res;
+                break; // Once we find an existing resource, stop
             }
         }
 
         if (resource == null) {
-            return propConfig; // No resource found, return the empty config
+            return propConfig; // No resource found, return empty config
         }
 
         // Log which file was actually used.
@@ -114,22 +112,24 @@ class PropertiesConfiguration {
                 new PathResource(filename),
                 new PathResource(getCustomPath(filename))
         };
+
         Resource resource = null;
-        for (Resource possibleResource : possiblePropertiesResources) {
-            if (possibleResource.exists()) {
-                resource = possibleResource;
-                break; // Use the first existing resource
+        // Check each resource manually
+        for (Resource res : possiblePropertiesResources) {
+            if (res.exists()) {
+                resource = res;
+                break; // Once we find an existing resource, stop
             }
         }
 
         if (resource == null) {
-            return null;
+            return null; // No valid resource found
         }
 
         final Properties properties = new Properties();
         try {
             properties.load(resource.getInputStream());
-        } catch(final IOException exception) {
+        } catch (final IOException exception) {
             throw new RuntimeException(exception);
         }
 
@@ -139,7 +139,7 @@ class PropertiesConfiguration {
     }
 
     private String getCustomPath(final String filename) {
-        if (propertiesLocation == null){
+        if (propertiesLocation == null) {
             return filename;
         }
         return propertiesLocation.endsWith(".properties") ? propertiesLocation : propertiesLocation + filename;
@@ -147,15 +147,15 @@ class PropertiesConfiguration {
 
     private String getCustomConfigPath() {
         final String systemLoc = System.getProperty("config.location");
-        if (systemLoc != null){
+        if (systemLoc != null) {
             return getCustomWithPath(systemLoc);
         }
 
         return getCustomWithPath(configLocation);
     }
 
-    private String getCustomWithPath(String path){
-        if (path == null){
+    private String getCustomWithPath(String path) {
+        if (path == null) {
             return CONFIG_FILE_NAME;
         }
         return path.endsWith(".yml") ? path : path + "/" + CONFIG_FILE_NAME;
