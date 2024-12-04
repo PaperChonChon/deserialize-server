@@ -31,7 +31,10 @@ public class ContainerConfiguration {
 
         if (httpsEnabled) {
             // Enable SSL
-            tomcat.setSecure(true);
+            //tomcat.setSecure(true);
+            
+            tomcat.getService().addConnector(connector);
+            LOG.info("HTTPS enabled");
 
             // Configure SSL context using KeyStore
             KeyStore keystore = KeyStore.getInstance("JKS");
