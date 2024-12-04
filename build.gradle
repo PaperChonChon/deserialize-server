@@ -8,18 +8,12 @@ sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
 repositories {
-    maven {
-        url 'http://repo1.maven.org/maven2/'
-    }
     mavenLocal()
     mavenCentral()
 }
 
 allprojects {
     repositories {
-        maven {
-            url 'http://repo1.maven.org/maven2/'
-        }
         mavenCentral()
     }
 }
