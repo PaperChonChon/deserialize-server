@@ -69,7 +69,7 @@ public class ContainerConfiguration {
         }
 
         StandardServer server = (StandardServer) tomcat.getServer();
-        server.addIgnoredProtocols("ajp,http2"); // Remove unnecessary protocols (optional)
+        //server.addIgnoredProtocols("ajp,http2"); // Remove unnecessary protocols (optional)
 
         // We directly return the configured Tomcat instance
         return tomcat;
