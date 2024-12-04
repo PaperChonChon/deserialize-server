@@ -47,7 +47,8 @@ public class ContainerConfiguration {
             keyManagerFactory.init(keystore, keystorePass.toCharArray());
 
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            trustManagerFactory.init(null); // You might need to set truststore here for client certificate validation
+            //trustManagerFactory.init(null); // You might need to set truststore here for client certificate validation
+            trustManagerFactory.init(null, null);
 
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
